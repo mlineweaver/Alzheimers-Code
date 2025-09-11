@@ -1,0 +1,6 @@
+import csv
+with open("UpdatedMetaData (2).csv", newline="") as f:
+    reader = csv.reader(f)
+    headers = next(reader) #Get the first row
+    for h in headers:
+        print(h)
