@@ -69,8 +69,61 @@ class Patient:
         # print all patients after reading
         for patient in Patient.all_patients:
             print(patient)
-
+Patient.all_patients.sort(key=lambda p: p.consensus_dx or [], reverse=False)
 
 # Example usage:
 if __name__ == "__main__":
     Patient.instantiate_from_csv("UpdatedMetaData.csv")
+
+
+#3) SORT OUR LIST OF PATIENTS
+
+#) Make a bar graph
+import matplotlib.pyplot as plt
+
+# Count patients with and without diagnoses
+with_dx = sum(1 for p in Patient.all_patients if p.consensus_dx is not None)
+without_dx = sum(1 for p in Patient.all_patients if p.consensus_dx is None)
+
+# Prepare data for bar plot
+labels = ['With Diagnoses', 'Without Diagnoses']
+counts = [with_dx, without_dx]
+
+# Plotting
+plt.figure(figsize=(8, 6))
+plt.bar(labels, counts, color=['skyblue', 'lightcoral'])
+plt.ylabel("Number of Patients")
+plt.title("Patients With vs Without Diagnoses")
+plt.grid(axis='y', linestyle='--', alpha=0.7)
+
+# Show the plot
+plt.tight_layout()
+plt.show()
+
+
+# ----------------------------
+# Count No dementia vs Dementia
+# ----------------------------
+print("\nTotal Patients with Dementia:")
+no_dementia_count = sum(1 for p in Patient.all_patients if p.cog_stat == "No dementia")
+dementia_count = sum(1 for p in Patient.all_patients if p.cog_stat != "No dementia")
+total_patients = len(Patient.all_patients)
+
+print(f"\nNumber of 'No dementia' patients: {no_dementia_count}")
+print(f"Number of 'Dementia/Other' patients: {dementia_count}")
+print(f"Total patients: {total_patients}")
+
+# ----------------------------
+# Count each individual consensus diagnosis
+# ----------------------------
+from collections import Counter
+
+dx_counter = Counter()
+
+for p in Patient.all_patients:
+    if p.consensus_dx:  # skip if None
+        dx_counter.update(p.consensus_dx)
+
+print("\nConsensus diagnosis counts:")
+for dx, count in dx_counter.items():
+    print(f"{dx}: {count}")
