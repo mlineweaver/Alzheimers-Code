@@ -76,6 +76,12 @@ class Patient:
                 )
 
 # ----------------------------
+# Load Patients
+# ----------------------------
+Patient.instantiate_from_csv("UpdatedMetaData.csv")
+Patient.all_patients.sort(key=lambda p: p.consensus_dx or [], reverse=False)
+
+# ----------------------------
 # Count No dementia vs Dementia
 # ----------------------------
 print("\nTotal Patients with Dementia:")
@@ -86,6 +92,8 @@ total_patients = len(Patient.all_patients)
 print(f"\nNumber of 'No dementia' patients: {no_dementia_count}")
 print(f"Number of 'Dementia/Other' patients: {dementia_count}")
 print(f"Total patients: {total_patients}")
+
+
 
 # ----------------------------
 # Count each individual consensus diagnosis
@@ -102,16 +110,6 @@ print("\nConsensus diagnosis counts:")
 for dx, count in dx_counter.items():
     print(f"{dx}: {count}")
 
-# ----------------------------
-# Load Patients
-# ----------------------------
-Patient.instantiate_from_csv("UpdatedMetaData.csv")
-Patient.all_patients.sort(key=lambda p: p.consensus_dx or [], reverse=False)
-
-# Debug: print first 10 patients’ diagnoses and MMSE
-print("\nFirst 10 patients' consensus_dx and Last MMSE:")
-for p in Patient.all_patients[:10]:
-    print(p.DonorID, "→", p.consensus_dx, "| Last MMSE:", p.mmse_score)
 
 
 # ----------------------------
