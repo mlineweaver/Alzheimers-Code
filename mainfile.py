@@ -308,6 +308,7 @@ plt.show()
 
 #9) GET PATIENT ATTRIBUTES THAT WE WANT TO COMPARE ON A SCATTER PLOT
 
+
 death_age_list = []
 MMSE_score= []
 
@@ -323,6 +324,11 @@ y = MMSE_score   # Dependent variable
 print(X)
 print(y)
 #10) VISUALIZE DATA ON A SCATTER PLOT
+# Clean the data to remove None values
+clean_data = [(age, mmse) for age, mmse in zip(death_age_list, MMSE_score) if age is not None and mmse is not None]
+
+# Unzip back into X and y
+X, y = zip(*clean_data)
 
 plt.scatter(X, y)
 plt.xlabel('Age of Death')
@@ -357,9 +363,17 @@ from sklearn.metrics import r2_score
 df = pd.read_csv("patient_data.csv")
 
 #14) Update these variable names to match EXACTLY your .csv file headers
+df = pd.read_csv("patient_data.csv")
+
+# Drop rows with missing values in either column
+df = df.dropna(subset=["Age of Death", "Last MMSE Score"])
+
+# Define variables
+x = df["Age of Death"].values.reshape(-1, 1)
+y = df["Last MMSE Score"].values
 
 x = df["Age of Death"].values.reshape(-1, 1)
-y = df["MMSE Score"].values
+y = df["Last MMSE Score"].values
 #15) Perform the linear regression
 
 model = LinearRegression()
